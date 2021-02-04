@@ -38,12 +38,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
     let preference = {
         items: [
         {
-            id:  10,
+            id:  1234,
             title: title,
             unit_price: Number(price),
             quantity: Number(unit),
             picture_url: path.join(BASE_URL + img ),
-            description: "Celular"
+            description: "Dispositivo móvil de Tienda e-commerce"
         }
         ],
         payer: {
@@ -53,6 +53,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
             phone: {
                 area_code: "11",
                 number: 22223333
+            },
+            address: {
+                street_name: 'False',
+                street_number: 123,
+                zip_code: "1111"
             }
         },
         external_reference: "mpalmieri@quaresitsolutions.com",
@@ -66,11 +71,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
             installments: 6
         },
         back_urls: {
-            aprobado: BASE_URL + 'aprobado',
-            rechazado: BASE_URL + 'rechazado'
+            success: BASE_URL + 'aprobado',
+            pending: BASE_URL + 'pendiente',
+            failure: BASE_URL + 'rechazado'
         },
+        auto_return: "approved",
         notification_url: BASE_URL + 'notificacion',
-        auto_return: "approved"
     };
 
   mercadopago.preferences.create(preference)
@@ -85,11 +91,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 });
 
 
-app.get('/aprobado', function (req, res) {
+app.get('/success', function (req, res) {
     //console.log(req.query);
+    console.log("pi",payment_info);
     if (req.query.payment_id) {
         res.render('respuesta', {
-            //mp_view: "success",
             titulo: "Aprobado",
             mensaje: "Gracias por su compra",
             payment_info: {
@@ -103,11 +109,28 @@ app.get('/aprobado', function (req, res) {
     }
 });
 
-app.get('/rechazado', function (req, res) {
+app.get('/pending', function (req, res) {
+    if (req.query.payment_id) {
+        console.log(payment_info);
+        res.render('respuesta', {
+            tittle: "Pendiente",
+            msg: "Su compra esta en estado pendiente",
+            payment_info: {
+                payment_id: req.query.payment_id,
+                external_reference: req.query.external_reference,
+                merchant_order_id: req.query.merchant_order_id
+            }
+        });
+    } else {
+        res.redirect("/");
+    }
+});
+
+
+app.get('/failure', function (req, res) {
     console.log(req.query);
     if (req.query.payment_id) {
         res.render('respuesta', {
-            //mp_view: "failure",
             titulo: "Rechazado",
             mensaje: "No se pudo realizar la compra",
             payment_info: {
