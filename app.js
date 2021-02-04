@@ -23,6 +23,7 @@ const testBuyer = {
 // Agrega credenciales
 mercadopago.configure({
     access_token: testSeller.accessToken,
+    integrator_id: 'dev_24c65fb163bf11ea96500242ac130004'
   });
 
 //BodyParse config
