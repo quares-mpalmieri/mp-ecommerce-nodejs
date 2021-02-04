@@ -71,9 +71,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
             installments: 6
         },
         back_urls: {
-            success: BASE_URL + 'aprobado',
-            pending: BASE_URL + 'pendiente',
-            failure: BASE_URL + 'rechazado'
+            success: BASE_URL + 'success',
+            pending: BASE_URL + 'pending',
+            failure: BASE_URL + 'failure'
         },
         auto_return: "approved",
         notification_url: BASE_URL + 'notificacion',
@@ -93,7 +93,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/success', function (req, res) {
     //console.log(req.query);
-    console.log("pi",payment_info);
     if (req.query.payment_id) {
         res.render('respuesta', {
             titulo: "Aprobado",
@@ -111,10 +110,9 @@ app.get('/success', function (req, res) {
 
 app.get('/pending', function (req, res) {
     if (req.query.payment_id) {
-        console.log(payment_info);
         res.render('respuesta', {
-            tittle: "Pendiente",
-            msg: "Su compra esta en estado pendiente",
+            titulo: "Pendiente",
+            mensaje: "Su compra esta en estado pendiente",
             payment_info: {
                 payment_id: req.query.payment_id,
                 external_reference: req.query.external_reference,
@@ -128,7 +126,6 @@ app.get('/pending', function (req, res) {
 
 
 app.get('/failure', function (req, res) {
-    console.log(req.query);
     if (req.query.payment_id) {
         res.render('respuesta', {
             titulo: "Rechazado",
