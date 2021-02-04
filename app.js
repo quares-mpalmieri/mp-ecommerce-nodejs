@@ -84,6 +84,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
   .then(function(response){
   // Este valor reemplazará el string "<%= global.id %>" en tu HTML
     global.id = response.body.id;
+    console.log("preference_id ",response.body.id);
     res.redirect(response.body.init_point);
   }).catch(function(error){
     console.log(error);
